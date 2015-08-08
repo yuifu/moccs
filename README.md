@@ -21,7 +21,7 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
 
 
-## Example
+# Example
 ### Calculate AUCs for all 6-mers
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_0/test_out_0
