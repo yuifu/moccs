@@ -9,7 +9,8 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 
 # Usage
 
-	perl MOCCS.pl -i <string> -k <int>|--regex <string> [--label <string>] [--mask] [--threshold <float>]
+	perl MOCCS.pl -i <string> -k <int>|--regex <string> \
+		[--label <string>] [--mask] [--threshold <float>]
 
 - `-i <string>`: FASTA file containing fixed-length sequences around transcription factor binding sites (TFBSs) identified by ChIP-Seq. If the file name ends with `.gz`, the file is treated as gzipped FASTA. If `-i stdin` is specified, MOCCS receive FASTA from the standard input.
 	- We recommend to use genomic sequences ±350 bp around the TFBSs.
