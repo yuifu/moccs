@@ -21,24 +21,24 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
 
 
-# Example
-## Calculate AUCs for all 6-mers
+## Example
+### Calculate AUCs for all 6-mers
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_0/test_out_0
 
-## Calculate AUCs for all 6-mers while thresholding k-mers with low AUCs
+### Calculate AUCs for all 6-mers while thresholding k-mers with low AUCs
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_1/test_out_1 --threshold 10
 
-## Calculate AUCs for all 6-mers while masking repeats (lower-case)
+### Calculate AUCs for all 6-mers while masking repeats (lower-case)
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_2/test_out_2 --mask
 
-## Calculate AUCs for CANNTG
+### Calculate AUCs for CANNTG
 
 	perl MOCCS.pl -i test_data/test_701bp.fa --regex CANNTG --label test_out_3/test_out_3
 
-## Calculate AUCs for CANNTG while masking fasta
+### Calculate AUCs for CANNTG while masking fasta
 	
 	perl MOCCS.pl -i test_data/test_701bp.fa --regex CANNTG --label test_out_4/test_out_4 --mask
 
