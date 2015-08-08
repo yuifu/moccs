@@ -26,45 +26,77 @@ THE SOFTWARE.
 
 =cut
 
+use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
 use Time::HiRes qw( time );
 use File::Basename;
 use POSIX; 
 use FindBin;
 
-print STDOUT "MOCCS version 1.3\n";
+print STDOUT "MOCCS version 1.4\n";
 
 my $start = time();
 my $current;
 
-chomp(@ARGV);
+my $input;
+my $k;
+my $regex; # regex
+my $label = "MOCCS_result";
+my $is_regex_mode = 0;
+my $mask = 0;
+my $use_threshold = 0;
+my $threshold;
+my $script_dir = $FindBin::Bin;
+my $rscript = "${script_dir}/MOCCS_visualize.r";
+my $fh;
 
-if($#ARGV < 2){ 
-    print STDERR "Error: No arguments are specified. Exiting.\n";
-    exit;
+GetOptions(
+    'i=s' => \$input,
+    'k=i' => \$k,
+    'regex=s' => \$regex,
+    'label=s' => \$label,
+    'mask' => \$mask,
+    'threshold=f' => \$threshold
+    );
+
+if($input eq ''){
+    print STDERR "Input FASTA name is not specified. Exiting.\n";
+    exit;   
 }
 
-
-my $k = $ARGV[1]; # length of k-mer 
-my $regex = $ARGV[1]; # regex
-my $label = $ARGV[2];
-my $mask = 0;
 my $ofile = "$label.mid.gz";
 my $ofile2 = "$label.crf.gz";
 my $ofile3 = "$label.auc_count.txt";
 my $moccs_out = "$label.MOCCS_visualize.log.txt";
-my $script_dir = $FindBin::Bin;
-my $rscript = "${script_dir}/MOCCS_visualize.r";
-my $fh;
-my $is_regex_mode = 0;
 
-if($#ARGV >= 3 && $ARGV[3] eq "-mask"){
-    $mask = 1;
-}
+print <<HERE;
+[Arguments]
+Sequence file: $input
+Output files: $ofile, $ofile2, $ofile3
+HERE
 
-if($k !~ /^[0-9]+$/){
+if(defined $k){
+    if(defined $regex){
+        print STDERR "-k and --regex cannot be used at the same time. Exiting.\n";
+        exit;
+    }
+    print "k: $k\n";
+}elsif(defined $regex){
     $k = length($regex);
     $is_regex_mode = 1;
+    print "regex: $regex\n";
+}else{
+    print STDERR "-k or --regex have to be specified. Exiting.\n";
+    exit;
 }
+if(defined $threshold){
+    $use_threshold = 1;
+    print "threshold: $threshold\n";
+}
+
+if($mask == 1){
+    print "mask: true\n";
+}
+
 
 if(! -e $rscript){
     die("Error: $rscript is not found. Exiting.\n");
@@ -73,17 +105,6 @@ if(! -e $rscript){
 if(! -d dirname($label)){
     mkdir dirname($label)
 }
-
-
-print <<HERE;
-[Arguments]
-Sequence file: $ARGV[0]
-is_regex_mode: $is_regex_mode
-k or regex: $regex
-Output files: $ofile, $ofile2, $ofile3
-
-HERE
-
 
 
 # Preparing hash(kmer) of hash(position) of count (Considering reverse compliment)
@@ -124,12 +145,12 @@ my ($kmer, $rmer);
 my $i;
 my $s;
 
-if($ARGV[0] eq "stdin"){
+if($input eq "stdin"){
     $fh = STDIN;
-}elsif($ARGV[0] =~ /\.gz$/){
-    open($fh, "zcat $ARGV[0] |") or die("Error :$!");
+}elsif($input =~ /\.gz$/){
+    open($fh, "gunzip -c $input |") or die("Error :$!");
 }else{
-    open($fh, $ARGV[0]) or die("Error :$!");
+    open($fh, $input) or die("Error :$!");
 }
 
 
@@ -181,7 +202,8 @@ print STDOUT "Length of sequences: $seq_len\n";
 
 my $cnk = &calcCnk($seq_count, $seq_len, $k);
 
-print "C_nk (low count threshold): " . $cnk . "\n";
+# print "C_nk (low count threshold): " . $cnk . "\n";
+print sprintf("C_nk (low count threshold): %.1f\n", $cnk) ;
 
 $current = time();
 printf("Elapsed time: %.2f\n", $current - $start);
@@ -240,6 +262,10 @@ foreach my $key (sort keys %hash_of_kmer_position_hash){
         $auc += $crf[$i] - (1/$center_l) * $i;
     }
 
+    if($use_threshold == 1 && $auc <= $threshold){
+        $c_skip++;
+        next;
+    }
     print O $key . "\t" . join("\t", @res) . "\n";
     print O1 $key . "\t" . join("\t", @crf) . "\n";
     print O2 $key . "\t" . $auc . "\t" . $sum . "\n";
