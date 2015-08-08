@@ -12,7 +12,7 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 	perl MOCCS.pl -i <string> -k <int>|--regex <string> [--label <string>] [--mask] [--threshold <float>]
 
 - `-i <string>`: FASTA file containing fixed-length sequences around transcription factor binding sites (TFBSs) identified by ChIP-Seq. If the file name ends with `.gz`, the file is treated as gzipped FASTA. If `-i stdin` is specified, MOCCS receive FASTA from the standard input.
-	- We recommend to use genomic sequences $\pm 350$ bp around the TFBSs.
+	- We recommend to use genomic sequences ±350 bp around the TFBSs.
 - `-k <int>`: Length of k-mers to calculate AUCs. Mutually exclusive with `--regex`.
 	- We recommend to set k to 5, 6, 7, or 8.
 - `--regex <string>`: (Optional) Regular expression (e.g. CANNTG). When this option is specified, MOCCS calculates AUCs for only k-mers corresponding to the regular expression. Currently, 'N' is interpreted as {A,C,G,T}. Mutually exclusive with `-k`.
