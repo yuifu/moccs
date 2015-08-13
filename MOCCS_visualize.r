@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# version 1.5
+
 options(stringsAsFactors = F)
 
 args=(commandArgs(TRUE))
@@ -45,6 +47,7 @@ cols <- c("#000000", "#ff2800","#faf500","#35a16b","#0041ff","#66ccff","#ff99a0"
 
 
 crf <- read.table(gzfile(file), header=T, stringsAsFactors=F, check.names=F, row.names=1)
+crf <- as.data.frame(t(apply(crf, 1, function(x){x/sum(x)})))
 d.auc <- read.table(file2, header=T, stringsAsFactors=F, row.names=1)
 auc <- d.auc$auc
 names(auc) <- rownames(d.auc)

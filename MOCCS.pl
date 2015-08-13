@@ -32,7 +32,7 @@ use File::Basename;
 use POSIX; 
 use FindBin;
 
-print STDOUT "MOCCS version 1.4\n";
+print STDOUT "MOCCS version 1.5\n";
 
 my $start = time();
 my $current;
@@ -137,7 +137,6 @@ printf("Elapsed time: %.2f\n", $current - $start);
 
 # Count occurrence for each position for each kmer one sequence by one.
 my $seq_count = 0;
-# $/ = ">";
 my $end;
 my $seq_len;
 my $seq;
@@ -160,7 +159,6 @@ while($s = <$fh>){
 my $header = "";
 while(defined($s) && $s =~ /^>/){
     chomp($s);
-    # $header = $s;
     $seq = "";
     while(1){
         if(!defined($s = <$fh>) || $s =~ /^>/){
@@ -169,25 +167,24 @@ while(defined($s) && $s =~ /^>/){
             }
             $seq = uc($seq);
 
-            # print $seq ."\n";
+            $seq_len = length($seq);
 
-            for($i = 0; $i <= length($seq)-$k; $i++){
+            for($i = 0; $i <= $seq_len-$k; $i++){
                 $kmer = substr($seq, $i, $k);
-                $rmer = &revComp($kmer);
                 if(defined $hash_of_kmer_position_hash{$kmer}){
                     $hash_of_kmer_position_hash{$kmer}{$i}++;
-                }elsif(defined $hash_of_kmer_position_hash{$rmer}){
-                    $hash_of_kmer_position_hash{$rmer}{$i}++;
+                }else{
+                    $rmer = &revComp($kmer);
+                    if(defined $hash_of_kmer_position_hash{$rmer}){
+                        $hash_of_kmer_position_hash{$rmer}{$i}++;
+                    }
                 }
             }
 
-            $seq_len = length($seq);
+            
             $end = $seq_len - $k;
 
             $seq_count++;
-            # if($seq_count % 100000 ==0){
-            #     print STDOUT "Finished $seq_count seqs\n";
-            # }
 
             last;
         }
@@ -202,7 +199,6 @@ print STDOUT "Length of sequences: $seq_len\n";
 
 my $cnk = &calcCnk($seq_count, $seq_len, $k);
 
-# print "C_nk (low count threshold): " . $cnk . "\n";
 print sprintf("C_nk (low count threshold): %.1f\n", $cnk) ;
 
 $current = time();
@@ -223,16 +219,17 @@ print O1 "kmer\t" . join("\t", (0..$center_l)) . "\n";
 print O2 "kmer\tauc\tcount\n";
 
 my $c_skip = 0;
+my @res = ();
+my @crf = ();
+my $sum = 0;
+my $auc = 0;
 foreach my $key (sort keys %hash_of_kmer_position_hash){
-    my @res = ();
-    my @crf = ();
-    my $sum = 0;
+    @res = ();
+    @crf = ();
+    $sum = 0;
     foreach my $pos (0..$end){
         if(defined $hash_of_kmer_position_hash{$key}{$pos}){
-            push(@res, $hash_of_kmer_position_hash{$key}{$pos});
             $sum += $hash_of_kmer_position_hash{$key}{$pos};
-        }else{
-            push(@res, 0);
         }
     }
     if($sum < $cnk){
@@ -240,7 +237,16 @@ foreach my $key (sort keys %hash_of_kmer_position_hash){
         next;
     }
 
+    foreach my $pos (0..$end){
+        if(defined $hash_of_kmer_position_hash{$key}{$pos}){
+            push(@res, $hash_of_kmer_position_hash{$key}{$pos});
+        }else{
+            push(@res, 0);
+        }
+    }
+
     push(@crf, 0);
+    $auc = 0;
 
     if($center_l - 1 == $center_r + 1){
         push(@crf, $res[$center_l-1]);
@@ -256,10 +262,8 @@ foreach my $key (sort keys %hash_of_kmer_position_hash){
         print STDERR "error: sum $sum != crf $crf[$#crf]\n";
     }
 
-    my $auc = 0;
     for($i = 0; $i <= $#crf; $i++){
-        $crf[$i] = $crf[$i] / $sum;
-        $auc += $crf[$i] - (1/$center_l) * $i;
+        $auc += $crf[$i] / $sum - (1/$center_l) * $i;
     }
 
     if($use_threshold == 1 && $auc <= $threshold){
@@ -317,7 +321,6 @@ sub revComp(){
 
 sub nucRegex(){
     my ($regex) = @_;
-    # my @base = ("A", "T", "G", "C");
     my @new = ();
     my $mer;
     my $b;
