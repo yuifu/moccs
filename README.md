@@ -4,7 +4,7 @@ Motif Centrality Analysis of ChIP-Seq (MOCCS) is a method for for clarifying DNA
 
 Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every $k$-mer that is bound by the DNA-binding proteins. 
 
-MOCCS (version 1.4) is written in Perl and R.  
+MOCCS (version 1.6) is written in Perl and R.  
 MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 
 # Usage
