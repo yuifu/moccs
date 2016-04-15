@@ -7,7 +7,7 @@ Given ChIP-Seq data of any DNA-binding proteins including transcription factors,
 MOCCS (version 1.7) is written in Perl and R.  
 MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 
-# History
+# Version history
 
 - 2016.04.15: Version 1.7.
 	- Added 'stranded' option. With this optin, MOCCS will count k-mers on the forward strand and will not reverse-complement k-mers. This is useful when analyzing RNA-binding proteins (RBPs) data (e.g. CLIP-Seq data).
