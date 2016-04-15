@@ -20,6 +20,7 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 - `--label <string>`: (Optional) Label used as the prefix of output files. Default is 'MOCCS_result'.
 - `--mask`: (Optional) Mask lower-case characters in fasta file as 'N'.
 - `--threshold <float>`: (Optional) Only print k-mers with AUCs higher than this value.
+- `--stranded`: (Optional) Count k-mers on the forward strand. This is useful when you analyze sequences bound by RNA-binding proteins (RBPs) (e.g. CLIP-Seq data).
 
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
 
@@ -44,6 +45,10 @@ Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl
 ### Calculate AUCs for CANNTG while masking fasta
 	
 	perl MOCCS.pl -i test_data/test_701bp.fa --regex CANNTG --label test_out_4/test_out_4 --mask
+
+### Calculate AUCs for all 6-mers on the forward strand (Useful for RBP binding data)
+
+	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_5/test_out_5 --stranded
 
 
 # Contact

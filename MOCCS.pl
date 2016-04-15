@@ -32,7 +32,7 @@ use File::Basename;
 use POSIX; 
 use FindBin;
 
-print STDOUT "MOCCS version 1.6\n";
+print STDOUT "MOCCS version 1.7\n";
 
 my $start = time();
 my $current;
@@ -48,6 +48,7 @@ my $threshold;
 my $script_dir = $FindBin::Bin;
 my $rscript = "${script_dir}/MOCCS_visualize.r";
 my $fh;
+my $stranded = 0;
 
 GetOptions(
     'i=s' => \$input,
@@ -55,7 +56,8 @@ GetOptions(
     'regex=s' => \$regex,
     'label=s' => \$label,
     'mask' => \$mask,
-    'threshold=f' => \$threshold
+    'threshold=f' => \$threshold,
+    'stranded' => \$stranded
     );
 
 if($input eq ''){
@@ -97,6 +99,9 @@ if($mask == 1){
     print "mask: true\n";
 }
 
+if($stranded == 1){
+    print "stranded: true\n";
+}
 
 if(! -e $rscript){
     die("Error: $rscript is not found. Exiting.\n");
@@ -115,20 +120,35 @@ my $mm;
 if($is_regex_mode == 1){
     foreach $mm (&nucRegex($regex)){
         $rev = &revComp($mm);
-        if(!defined $hash_of_kmer_position_hash{$rev}){
+        if($stranded == 1){
            my %a = ();
            $hash_of_kmer_position_hash{$mm} = \%a;
+           my %a = ();
+           $hash_of_kmer_position_hash{$rev} = \%a;
+        }else{
+            if(!defined $hash_of_kmer_position_hash{$rev}){
+               my %a = ();
+               $hash_of_kmer_position_hash{$mm} = \%a;
+            }
         }
     }
 }else{
     foreach $mm (&nuc($k)){
         $rev = &revComp($mm);
-        if(!defined $hash_of_kmer_position_hash{$rev}){
-        	my %a = ();
-        	$hash_of_kmer_position_hash{$mm} = \%a;
+        if($stranded == 1){
+           my %a = ();
+           $hash_of_kmer_position_hash{$mm} = \%a;
+           my %a = ();
+           $hash_of_kmer_position_hash{$rev} = \%a;
+        }else{
+            if(!defined $hash_of_kmer_position_hash{$rev}){
+               my %a = ();
+               $hash_of_kmer_position_hash{$mm} = \%a;
+            }
         }
     }
 }
+
 
 print STDOUT "# of ${k}mer: " . scalar(keys %hash_of_kmer_position_hash) . "\n";
 
@@ -177,9 +197,11 @@ while(defined($s) && $s =~ /^>/){
                 if(defined $hash_of_kmer_position_hash{$kmer}){
                     $hash_of_kmer_position_hash{$kmer}{$i}++;
                 }else{
-                    $rmer = &revComp($kmer);
-                    if(defined $hash_of_kmer_position_hash{$rmer}){
-                        $hash_of_kmer_position_hash{$rmer}{$i}++;
+                    if($stranded == 0){
+                        $rmer = &revComp($kmer);
+                        if(defined $hash_of_kmer_position_hash{$rmer}){
+                            $hash_of_kmer_position_hash{$rmer}{$i}++;
+                        }
                     }
                 }
             }
