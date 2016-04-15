@@ -4,8 +4,14 @@ Motif Centrality Analysis of ChIP-Seq (MOCCS) is a method for for clarifying DNA
 
 Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every $k$-mer that is bound by the DNA-binding proteins. 
 
-MOCCS (version 1.6) is written in Perl and R.  
+MOCCS (version 1.7) is written in Perl and R.  
 MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
+
+# History
+
+- 2016.04.15: Version 1.7.
+	- Added 'stranded' option. With this optin, MOCCS will count k-mers on the forward strand and will not reverse-compliment k-mers. This is useful when analyzing RNA-binding proteins (RBPs) data (e.g. CLIP-Seq data).
+	- Added 
 
 # Usage
 
@@ -21,6 +27,7 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 - `--mask`: (Optional) Mask lower-case characters in fasta file as 'N'.
 - `--threshold <float>`: (Optional) Only print k-mers with AUCs higher than this value.
 - `--stranded`: (Optional) Count k-mers on the forward strand. This is useful when you analyze sequences bound by RNA-binding proteins (RBPs) (e.g. CLIP-Seq data).
+- `--low-count-threshold <float>`: (Optional) Only print k-mers with AUCs higher than this value.
 
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
 
@@ -50,6 +57,9 @@ Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_5/test_out_5 --stranded
 
+### Calculate AUCs for all 6-mers with a fixed low-count threshold
+
+	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_6/test_out_6 --low-count-threshold 100
 
 # Contact
 

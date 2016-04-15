@@ -49,6 +49,7 @@ my $script_dir = $FindBin::Bin;
 my $rscript = "${script_dir}/MOCCS_visualize.r";
 my $fh;
 my $stranded = 0;
+my $cnk;
 
 GetOptions(
     'i=s' => \$input,
@@ -57,7 +58,8 @@ GetOptions(
     'label=s' => \$label,
     'mask' => \$mask,
     'threshold=f' => \$threshold,
-    'stranded' => \$stranded
+    'stranded' => \$stranded,
+    'low-count-threshold=f' => \$cnk
     );
 
 if($input eq ''){
@@ -111,6 +113,11 @@ if(! -d dirname($label)){
     mkdir dirname($label)
 }
 
+if(defined $threshold){
+    $use_threshold = 1;
+    print "threshold: $threshold\n";
+}
+
 
 # Preparing hash(kmer) of hash(position) of count (Considering reverse compliment)
 my %hash_of_kmer_position_hash = ();
@@ -123,12 +130,12 @@ if($is_regex_mode == 1){
         if($stranded == 1){
            my %a = ();
            $hash_of_kmer_position_hash{$mm} = \%a;
-           my %a = ();
-           $hash_of_kmer_position_hash{$rev} = \%a;
+           my %b = ();
+           $hash_of_kmer_position_hash{$rev} = \%b;
         }else{
             if(!defined $hash_of_kmer_position_hash{$rev}){
                my %a = ();
-               $hash_of_kmer_position_hash{$mm} = \%a;
+               $hash_of_kmer_position_hash{$mm} = \%;
             }
         }
     }
@@ -138,8 +145,8 @@ if($is_regex_mode == 1){
         if($stranded == 1){
            my %a = ();
            $hash_of_kmer_position_hash{$mm} = \%a;
-           my %a = ();
-           $hash_of_kmer_position_hash{$rev} = \%a;
+           my %b = ();
+           $hash_of_kmer_position_hash{$rev} = \%b;
         }else{
             if(!defined $hash_of_kmer_position_hash{$rev}){
                my %a = ();
@@ -225,9 +232,9 @@ close($fh);
 print STDOUT "Number of sequences: $seq_count\n";
 print STDOUT "Length of sequences: $seq_len\n";
 
-my $cnk = &calcCnk($seq_count, $seq_len, $k);
-
-# print "C_nk (low count threshold): " . $cnk . "\n";
+if(! defined $cnk){
+    $cnk = &calcCnk($seq_count, $seq_len, $k);
+}
 print sprintf("C_nk (low count threshold): %.1f\n", $cnk) ;
 
 $current = time();
