@@ -67,5 +67,5 @@ Haruka Ozaki <harukao.cb@gmail.com>
 
 # License 
 
-Copyright (c) [2015] [Haruka Ozaki]
+Copyright (c) [2016] [Haruka Ozaki]
 This software is released under the MIT License, see LICENSE.txt.
