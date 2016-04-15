@@ -10,8 +10,8 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 # History
 
 - 2016.04.15: Version 1.7.
-	- Added 'stranded' option. With this optin, MOCCS will count k-mers on the forward strand and will not reverse-compliment k-mers. This is useful when analyzing RNA-binding proteins (RBPs) data (e.g. CLIP-Seq data).
-	- Added 
+	- Added 'stranded' option. With this optin, MOCCS will count k-mers on the forward strand and will not reverse-complement k-mers. This is useful when analyzing RNA-binding proteins (RBPs) data (e.g. CLIP-Seq data).
+	- Added '--low-count-threshold' option. 
 
 # Usage
 
@@ -26,8 +26,8 @@ MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 - `--label <string>`: (Optional) Label used as the prefix of output files. Default is 'MOCCS_result'.
 - `--mask`: (Optional) Mask lower-case characters in fasta file as 'N'.
 - `--threshold <float>`: (Optional) Only print k-mers with AUCs higher than this value.
-- `--stranded`: (Optional) Count k-mers on the forward strand. This is useful when you analyze sequences bound by RNA-binding proteins (RBPs) (e.g. CLIP-Seq data).
-- `--low-count-threshold <float>`: (Optional) Only print k-mers with AUCs higher than this value.
+- `--stranded`: (Optional) Count k-mers on the forward strand. This is useful when you analyze sequences bound by RNA-binding proteins (RBPs) (e.g. CLIP-Seq data). By default, MOCCS sums counts of a k-mer and its reverse-complement before calculation of the AUC score.
+- `--low-count-threshold <float>`: (Optional) Set the low-count threshold. Those k-mers whose counts are less than this value will be filtered. By default, MOCCS set the low-count threshold to `N * (w - k + 1) / 4^k`.
 
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
 
