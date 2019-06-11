@@ -252,13 +252,14 @@ open(O3, "> $ofile3");
 
 print O1 "kmer\t" . join("\t", (0..$end)) . "\n";
 print O2 "kmer\t" . join("\t", (0..$center_l)) . "\n";
-print O3 "kmer\tauc\tcount\n";
+print O3 "kmer\tauc\tcount\tMOCCS2score\n";
 
 my $c_skip = 0;
 my @res = ();
 my @crf = ();
 my $sum = 0;
 my $auc = 0;
+my $moccs2score = 0;
 foreach my $key (sort keys %hash_of_kmer_position_hash){
     @res = ();
     @crf = ();
@@ -308,9 +309,13 @@ foreach my $key (sort keys %hash_of_kmer_position_hash){
         $c_skip++;
         next;
     }
+
+    # Calculate MOCCS2 score
+    $moccs2score = &calcMoccs2Score($auc, $sum, $seq_len, $k)
+
     print O1 $key . "\t" . join("\t", @res) . "\n";
     print O2 $key . "\t" . join("\t", @crf) . "\n";
-    print O3 $key . "\t" . $auc . "\t" . $sum . "\n";
+    print O3 $key . "\t" . $auc . "\t" . $sum . "\t" . $moccs2score . "\n";
 }
 
 close(O1);
@@ -389,8 +394,16 @@ sub regexBases(){
 
 sub calcCnk(){
     my ($N, $w, $k) = @_;
-    return $N * ($w - $k + 1) / (4 ** $k)
+    return $N * ($w - $k + 1) / (4 ** $k) ;
 }
+
+sub calcMoccs2Score(){
+    my ($auc, $N, $w, $k) = @_;
+    my $window = floor($seq_len - 1)/2 + 1 - floor($k/2)
+#     (250+1-k/2)*(12^(-0.5))*(count)^(-0.5)
+    return $auc / $window * 12**(0.5) * $N**(0.5);
+}
+
 
 
 exit;
