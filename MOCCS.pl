@@ -398,7 +398,7 @@ sub calcCnk(){
 }
 
 sub calcMoccs2Score(){
-    my ($auc, $N, $w, $k) = @_;
+    my ($auc, $N, $seq_len, $k) = @_;
     my $window = floor($seq_len - 1)/2 + 1 - floor($k/2)
     return $auc / $window * 12**(0.5) * $N**(0.5);
 }
