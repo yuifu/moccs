@@ -400,7 +400,6 @@ sub calcCnk(){
 sub calcMoccs2Score(){
     my ($auc, $N, $w, $k) = @_;
     my $window = floor($seq_len - 1)/2 + 1 - floor($k/2)
-#     (250+1-k/2)*(12^(-0.5))*(count)^(-0.5)
     return $auc / $window * 12**(0.5) * $N**(0.5);
 }
 
