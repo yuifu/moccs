@@ -4,8 +4,8 @@ Motif Centrality Analysis of ChIP-Seq (MOCCS) is a method for for clarifying DNA
 
 Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every $k$-mer that is bound by the DNA-binding proteins.
 
-MOCCS (version 1.7) is written in Perl and R.  
-MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
+MOCCS (version 2.0) is written in Perl and R.  
+TODO: MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 
 
 ## Version history
@@ -64,10 +64,21 @@ Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl
 
 	perl MOCCS.pl -i test_data/test_701bp.fa -k 6 --label test_out_6/test_out_6 --low-count-threshold 100
 
-## MOCCS2 score
-If a k-mer sequence has a low appearance count, the AUC calculated by MOCCS for the k-mer is unstable. To overcome this issue, we (Hikari Yoshitane, Yoshimasa Asano, Wataru Iwasaki, and Haruka Ozaki) devised the MOCCS2 score, which is a relative value of AUC normalized by the standard deviation (SD) at its appearance count. From MOCCS version 2.0 (abbreviated as MOCCS2), MOCCS calculates MOCCS2 score for each k-mer sequence as well as an AUC.
+## AUC and MOCCS2 score
+MOCCS (since version 2.0) calculates AUC and MOCCS2 score for each k-mer sequence.
 
-Let $C$ be the appearance count of the k-mer sequence and Let $W$ be the size of the analyzed window where k-mer sequences are sought at around ChIP-peak positions, MOCCS2 score is defined as follows:
+**AUC** is the area under the cumulative relative frequency curve of the appearance of each k-mer sequence against distance from TFBSs, which represents sharpness of the histogram of its appearance around TFBSs. Note that the AUC becomes larger if the shape becomes sharper.
+
+Let $f(x)$ be the appearance count of each k-mer sequence at the position  $±x$ bp away from TFBSs and $x \in [1,d]$, then the cumulative relative frequency distribution $F(x)$ for the k-mer sequence is calculated as follows:
+
+$$F(x) = \frac{\sum_{i \in [1,x]} f(i)}{\sum_{j \in [1,d]}f(j)}$$
+and its AUC is calculated as follows:
+$$\textrm{[AUC]} = \sum_{1 \leq x \leq d} \Bigl(F(x) - \frac{x}{d}\Bigr).$$
+
+
+**MOCCS2 score** is a relative value of AUC normalized by the standard deviation (SD) at its appearance count.
+
+Let $C$ be the appearance count of the k-mer sequence and let $W$ be the size of the analyzed window where k-mer sequences are sought at around ChIP-seq peak positions, MOCCS2 score is defined as follows:
 
 $$\textrm{[MOCCS2 score]} = \textrm{[AUC]} / \textrm{[SD of AUC]} = \textrm{[AUC]} \times \frac{\sqrt{12C}}{W}$$
 
