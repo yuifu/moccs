@@ -2,7 +2,7 @@
 
 Motif Centrality Analysis of ChIP-Seq (MOCCS) is a method for for clarifying DNA-binding motif ambiguity.
 
-Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every $k$-mer that is bound by the DNA-binding proteins.
+Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every k-mer that is bound by the DNA-binding proteins.
 
 MOCCS (version 2.0) is written in Perl and R.  
 MOCCS was tested on Perl version 5.26.2 and R version 3.6.0.
@@ -79,7 +79,7 @@ MOCCS (since version 2.0) calculates AUC and MOCCS2 score for each k-mer sequenc
 
 **AUC** is the area under the cumulative relative frequency curve of the appearance of each k-mer sequence against distance from TFBSs, which represents sharpness of the histogram of its appearance around TFBSs. Note that the AUC becomes larger if the shape becomes sharper.
 
-Let <img src="https://latex.codecogs.com/gif.latex?f(x)" /> be the appearance count of each k-mer sequence at the position  $±x$ bp away from TFBSs and <img src="https://latex.codecogs.com/gif.latex?x&space;\in&space;[1,d]" />, then the cumulative relative frequency distribution $F(x)$ for the k-mer sequence is calculated as follows:
+Let <img src="https://latex.codecogs.com/gif.latex?f(x)" /> be the appearance count of each k-mer sequence at the position <img src="https://latex.codecogs.com/gif.latex?\pm&space;x"> bp away from TFBSs and <img src="https://latex.codecogs.com/gif.latex?x&space;\in&space;[1,d]" />, then the cumulative relative frequency distribution <img src="https://latex.codecogs.com/gif.latex?F(x)"> for the k-mer sequence is calculated as follows:
 
 <p align="center"><img src="https://latex.codecogs.com/gif.latex?F(x)&space;=&space;\frac{\sum_{i&space;\in&space;[1,x]}&space;f(i)}{\sum_{j&space;\in&space;[1,d]}f(j)}" ></p>
 
@@ -93,7 +93,7 @@ and its AUC is calculated as follows:
 <!-- $$\textrm{[AUC]} = \sum_{1 \leq x \leq d} \Bigl(F(x) - \frac{x}{d}\Bigr).$$ -->
 
 
-**MOCCS2 score** is a relative value of AUC normalized by the standard deviation (SD) at its appearance count.
+**MOCCS2 score** is a relative value of AUC normalized by the standard deviation (SD) at its appearance count. We recommend to use MOCCS2 score since MOCCS2 score is more robust to low appearance count than AUC is.
 
 Let <img src="https://latex.codecogs.com/gif.latex?C"> be the appearance count of the k-mer sequence and let <img src="https://latex.codecogs.com/gif.latex?W" /> be the size of the analyzed window where k-mer sequences are sought at around ChIP-seq peak positions, MOCCS2 score is defined as follows:
 
@@ -106,7 +106,7 @@ The calculation of [SD of AUC] was mathematically derived as follows:
 > If a k-mer sequence appears only once at a random position within the window, its coordinate follows the uniform distribution <img src="https://latex.codecogs.com/gif.latex?U(0,&space;W)">, whose variance is known to be <img src="https://latex.codecogs.com/gif.latex?W^2&space;/&space;12">. Because i) AUC is calculated by subtracting <img src="https://latex.codecogs.com/gif.latex?W&space;/&space;2"> from the coordinate and ii) constant subtraction does not affect variance of probability distributions, variance of AUC is also <img src="https://latex.codecogs.com/gif.latex?W^2&space;/&space;12"> if the appearance count is <img src="https://latex.codecogs.com/gif.latex?1">.
 > <!-- > If a k-mer sequence appears only once at a random position within the window, its coordinate follows the uniform distribution $U(0, W)$, whose variance is known to be $W^2 / 12$. Because i) AUC is calculated by subtracting $W / 2$ from the coordinate and ii) constant subtraction does not affect variance of probability distributions, variance of AUC is also $W^2 / 12$ if the appearance count is $1$. -->
 >
-> Next, assume that a k-mer sequence appears <img src="https://latex.codecogs.com/gif.latex?C"> times at random positions within the window. The variance of the sum of their coordinates becomes <img src="https://latex.codecogs.com/gif.latex?CW^2&space;/&space;12">, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting <img src="https://latex.codecogs.com/gif.latex?W/2">, the variance of AUC is
+> Next, assume that a k-mer sequence appears <img src="https://latex.codecogs.com/gif.latex?C"> times at random positions within the window. The variance of the sum of their coordinates becomes <img src="https://latex.codecogs.com/gif.latex?CW^2&space;/&space;12">, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by <img src="https://latex.codecogs.com/gif.latex?C"> and subtracting <img src="https://latex.codecogs.com/gif.latex?W/2">, the variance of AUC is
 >
 > <p align="center"><img src="https://latex.codecogs.com/gif.latex?(CW^2&space;/12)/C^2&space;=W^2&space;/12C&space;,"></p>
 >
@@ -121,7 +121,7 @@ The calculation of [SD of AUC] was mathematically derived as follows:
 >
 > $$[𝑆𝐷 𝑜𝑓 𝐴𝑈𝐶] = \frac{𝑊}{\sqrt{12C}}$$ -->
 
-In the current implementation of MOCCS2, <img src="https://latex.codecogs.com/gif.latex?W"> was set to `floor((sequence_length - 1)/2) + 1 – floor(k / 2)`. Note that since the value of <img src="https://latex.codecogs.com/gif.latex?W"> is the same for every k-mer sequence, the relative ranks among k-mer sequences are not affected by the choice of the definition of <img src="https://latex.codecogs.com/gif.latex?W">.
+In the current implementation of MOCCS2, <img src="https://latex.codecogs.com/gif.latex?W"> was set to `floor((sequence_length - 1)/2) + 1 – floor(k / 2)`. Note that since the value of <img src="https://latex.codecogs.com/gif.latex?W"> is the same for every k-mer sequence, the relative ranks based on MOCCS2 score among k-mer sequences are not affected by the choice of the definition of <img src="https://latex.codecogs.com/gif.latex?W">.
 
 ## Citation
 
