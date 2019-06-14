@@ -68,7 +68,7 @@ sprintf("outfile: %s", pdfname)
 pdf(pdfname)
 
 matplot(t(crf2), type="n", col="gray", lwd=0.5, main=label, lty=1,
-	sub=paste0(k, "-mers"), xlab=xlab, ylab=ylab, axes=F)
+	sub=paste0("Top ", k, "-mers based on AUC"), xlab=xlab, ylab=ylab, axes=F)
 box()
 # axis(1, 1:ncol(crf2), 0:end)
 axis(1, seq(1, ncol(crf2), by=50), seq(0, end, by = 50)) 
@@ -85,7 +85,48 @@ legend("bottomright", legend=names(auc[1:i.max]), col=cols[1:i.max], lwd=1)
 
 dev.off()
 
+#################################
+# Top 10 k-mers based on MOCCS2score
 
+##################################################################
+# Top 10 k-mers based on MOCCS2score
+MOCCS2score <- d.auc$MOCCS2score
+names(MOCCS2score) <- rownames(d.auc)
+MOCCS2score <- MOCCS2score[ order(MOCCS2score, decreasing=T) ]
+
+xlab <- "Distance from peak center [bp]"
+ylab <- "Cumulative relative freqency"
+end <- as.numeric(colnames(crf)[ncol(crf)])
+print(sprintf("x-axis: [0, %d]", end))
+
+# make roc-like curve plot of MOCCS2score for top 10 k-mers
+# MOCCS2score <- MOCCS2score[1:10]
+crf2 <- crf[names(MOCCS2score),]
+
+pdfname <- paste0(label, "_", k, "-mer_MOCCS2score_plot", ".pdf")
+sprintf("outfile: %s", pdfname)
+
+pdf(pdfname)
+
+matplot(t(crf2), type="n", col="gray", lwd=0.5, main=label, lty=1,
+	sub=paste0("Top ", k, "-mers based on MOCCS2score"), xlab=xlab, ylab=ylab, axes=F)
+box()
+# axis(1, 1:ncol(crf2), 0:end)
+axis(1, seq(1, ncol(crf2), by=50), seq(0, end, by = 50)) 
+axis(2)
+
+# i.max <- ifelse(length(MOCCS2score)<10, length(MOCCS2score), 10)
+i.max = min(length(MOCCS2score), 10)
+for(i in i.max:1){
+	matpoints(t(crf2[grep(names(MOCCS2score)[i],rownames(crf2)),]), type="l", col=cols[i], lwd=1, lty=1)
+}
+legend("bottomright", legend=names(MOCCS2score[1:i.max]), col=cols[1:i.max], lwd=1)
+
+
+
+dev.off()
+
+#################################
 
 
 

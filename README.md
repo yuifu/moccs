@@ -5,13 +5,14 @@ Motif Centrality Analysis of ChIP-Seq (MOCCS) is a method for for clarifying DNA
 Given ChIP-Seq data of any DNA-binding proteins including transcription factors, MOCCS comprehensively analyzes and describes every $k$-mer that is bound by the DNA-binding proteins.
 
 MOCCS (version 2.0) is written in Perl and R.  
-TODO: MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
+MOCCS was tested on Perl version 5.26.2 and R version 3.6.0.
 
 
 ## Version history
 
-- 2019/06/11: Version 2.0.
+- 2019/06/14: Version 2.0.
 	- Added MOCCS2 score in the output (See below for MOCCS2 score).
+	- MOCCS now generates a plot of cumulative relative frequency curves of top k-mer sequences based on MOCCS2 score, in addition to that based on AUC.
 - 2016/04/15: Version 1.7.
 	- Added 'stranded' option. With this optin, MOCCS will count k-mers on the forward strand and will not reverse-complement k-mers. This is useful when analyzing RNA-binding proteins (RBPs) data (e.g. CLIP-Seq data).
 	- Added '--low-count-threshold' option.
@@ -33,6 +34,15 @@ TODO: MOCCS was tested on Perl version 5.18.2 and R version 3.2.1.
 - `--low-count-threshold <float>`: (Optional) Set the low-count threshold. Those k-mers whose counts are less than this value will be filtered. By default, MOCCS set the low-count threshold to `N * (w - k + 1) / 4^k`.
 
 Note that `MOCCS_visualize.r` must be located on the same directory as `MOCCS.pl`.
+
+### Output
+
+1. `${label}.auc_count.txt`: Count, AUC, and MOCCS2 score for k-mer sequences.
+2. `${label}.mid.gz`: Aggregated appearance counts around TFBSs for k-mer sequences. For debug.
+3. `${label}.crf.gz`: Cumulative relative frequencies for k-mer sequences. For debug.
+4. `${label}_${k}-mer_auc_plot.pdf`: Plot of cumulative relative frequency curves for top 10 k-mer sequences based on AUC.
+5. `${label}_${k}-mer_MOCCS2score_plot.pdf`: Plot of cumulative relative frequency curves for top 10 k-mer sequences based on MOCCS2 score.
+6. `${label}.MOCCS_visualize.log.txt`: R log for creating `${label}_${k}-mer_auc_plot.pdf`.
 
 
 ## Example
