@@ -94,13 +94,15 @@ $$\textrm{[MOCCS2 score]} = \textrm{[AUC]} / \textrm{[SD of AUC]} = \textrm{[AUC
 
 The calculation of [SD of AUC] was mathematically derived as follows:
 
-> If a k-mer sequence appears only once at a random position within the window, its coordinate follows the uniform distribution $U(0, W)$, whose variance is known to be $W^2 / 12$. Because i) AUC is calculated by subtracting $W / 2$ from the coordinate and ii) constant subtraction does not affect variance of probability distributions, variance of AUC is also $W^2 / 12$ if the appearance count is $1$.
->
-> Next, assume that a k-mer sequence appears $C$ times at random positions within the window. The variance of the sum of their coordinates becomes $CW^2 / 12$, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting $W/2$, the variance of AUC is
-> $$(CW^2 /12)/C^2 =W^2 /12C ,$$
-> if the appearance count is $C$. Finally, we obtain [SD of AUC] by taking the square root of the variance:
->
-> $$[𝑆𝐷 𝑜𝑓 𝐴𝑈𝐶] = \frac{𝑊}{\sqrt{12C}}$$
+If a k-mer sequence appears only once at a random position within the window, its coordinate follows the uniform distribution $U(0, W)$, whose variance is known to be $W^2 / 12$. Because i) AUC is calculated by subtracting $W / 2$ from the coordinate and ii) constant subtraction does not affect variance of probability distributions, variance of AUC is also $W^2 / 12$ if the appearance count is $1$.
+
+Next, assume that a k-mer sequence appears $C$ times at random positions within the window. The variance of the sum of their coordinates becomes $CW^2 / 12$, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting $W/2$, the variance of AUC is
+
+$$(CW^2 /12)/C^2 =W^2 /12C ,$$
+
+if the appearance count is $C$. Finally, we obtain [SD of AUC] by taking the square root of the variance:
+
+$$[𝑆𝐷 𝑜𝑓 𝐴𝑈𝐶] = \frac{𝑊}{\sqrt{12C}}$$
 
 In the current implementation of MOCCS2, $W$ was set to `floor((sequence_length - 1)/2) + 1 – floor(k / 2)`. Note that since the value of $W$ is the same for every $k$-mer, the relative ranks among k-mer sequences are not affected by the choice of the definition of $W$.
 
