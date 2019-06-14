@@ -311,7 +311,7 @@ foreach my $key (sort keys %hash_of_kmer_position_hash){
     }
 
     # Calculate MOCCS2 score
-    $moccs2score = &calcMoccs2Score($auc, $sum, $seq_len, $k)
+    $moccs2score = &calcMoccs2Score($auc, $sum, $seq_len, $k);
 
     print O1 $key . "\t" . join("\t", @res) . "\n";
     print O2 $key . "\t" . join("\t", @crf) . "\n";
@@ -399,7 +399,7 @@ sub calcCnk(){
 
 sub calcMoccs2Score(){
     my ($auc, $N, $seq_len, $k) = @_;
-    my $window = floor($seq_len - 1)/2 + 1 - floor($k/2)
+    my $window = floor($seq_len - 1)/2 + 1 - floor($k/2);
     return $auc / $window * 12**(0.5) * $N**(0.5);
 }
 
