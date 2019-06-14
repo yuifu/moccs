@@ -112,8 +112,7 @@ The calculation of [SD of AUC] was mathematically derived as follows:
 >
 > if the appearance count is <img src="https://latex.codecogs.com/gif.latex?C">. Finally, we obtain [SD of AUC] by taking the square root of the variance:
 >
-> <p align="center">
-<img src="https://latex.codecogs.com/gif.latex?\textrm{[SD&space;of&space;AUC]}&space;=&space;\frac{W}{\sqrt{12C}}"></p>
+> <p align="center"><img src="https://latex.codecogs.com/gif.latex?\textrm{[SD&space;of&space;AUC]}&space;=&space;\frac{W}{\sqrt{12C}}"></p>
 
 
 <!-- > Next, assume that a k-mer sequence appears $C$ times at random positions within the window. The variance of the sum of their coordinates becomes $CW^2 / 12$, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting $W/2$, the variance of AUC is
