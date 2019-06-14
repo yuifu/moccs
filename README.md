@@ -81,13 +81,13 @@ MOCCS (since version 2.0) calculates AUC and MOCCS2 score for each k-mer sequenc
 
 Let <img src="https://latex.codecogs.com/gif.latex?f(x)" /> be the appearance count of each k-mer sequence at the position  $±x$ bp away from TFBSs and <img src="https://latex.codecogs.com/gif.latex?x&space;\in&space;[1,d]" />, then the cumulative relative frequency distribution $F(x)$ for the k-mer sequence is calculated as follows:
 
-<center><img src="https://latex.codecogs.com/gif.latex?F(x)&space;=&space;\frac{\sum_{i&space;\in&space;[1,x]}&space;f(i)}{\sum_{j&space;\in&space;[1,d]}f(j)}" ></center>
+<p align="center"><img src="https://latex.codecogs.com/gif.latex?F(x)&space;=&space;\frac{\sum_{i&space;\in&space;[1,x]}&space;f(i)}{\sum_{j&space;\in&space;[1,d]}f(j)}" ></p>
 
 
 <!-- $$F(x) = \frac{\sum_{i \in [1,x]} f(i)}{\sum_{j \in [1,d]}f(j)}$$ -->
 and its AUC is calculated as follows:
 
-<center><img src="https://latex.codecogs.com/gif.latex?\textrm{[AUC]}&space;=&space;\sum_{1&space;\leq&space;x&space;\leq&space;d}&space;\Bigl(F(x)&space;-&space;\frac{x}{d}\Bigr)"  align="middle" >.</center>  
+<p align="center"><img src="https://latex.codecogs.com/gif.latex?\textrm{[AUC]}&space;=&space;\sum_{1&space;\leq&space;x&space;\leq&space;d}&space;\Bigl(F(x)&space;-&space;\frac{x}{d}\Bigr)">.</p>
 
 
 <!-- $$\textrm{[AUC]} = \sum_{1 \leq x \leq d} \Bigl(F(x) - \frac{x}{d}\Bigr).$$ -->
@@ -97,7 +97,7 @@ and its AUC is calculated as follows:
 
 Let <img src="https://latex.codecogs.com/gif.latex?C"> be the appearance count of the k-mer sequence and let <img src="https://latex.codecogs.com/gif.latex?W" /> be the size of the analyzed window where k-mer sequences are sought at around ChIP-seq peak positions, MOCCS2 score is defined as follows:
 
-<center><img src="https://latex.codecogs.com/gif.latex?\textrm{[MOCCS2&space;score]}&space;=&space;\textrm{[AUC]}&space;/&space;\textrm{[SD&space;of&space;AUC]}&space;=&space;\textrm{[AUC]}&space;\times&space;\frac{\sqrt{12C}}{W}"></center>
+<p align="center"><img src="https://latex.codecogs.com/gif.latex?\textrm{[MOCCS2&space;score]}&space;=&space;\textrm{[AUC]}&space;/&space;\textrm{[SD&space;of&space;AUC]}&space;=&space;\textrm{[AUC]}&space;\times&space;\frac{\sqrt{12C}}{W}"></p>
 
 <!-- $$\textrm{[MOCCS2 score]} = \textrm{[AUC]} / \textrm{[SD of AUC]} = \textrm{[AUC]} \times \frac{\sqrt{12C}}{W}$$ -->
 
@@ -108,11 +108,12 @@ The calculation of [SD of AUC] was mathematically derived as follows:
 >
 > Next, assume that a k-mer sequence appears <img src="https://latex.codecogs.com/gif.latex?C"> times at random positions within the window. The variance of the sum of their coordinates becomes <img src="https://latex.codecogs.com/gif.latex?CW^2&space;/&space;12">, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting <img src="https://latex.codecogs.com/gif.latex?W/2">, the variance of AUC is
 >
-> <center><img src="https://latex.codecogs.com/gif.latex?(CW^2&space;/12)/C^2&space;=W^2&space;/12C&space;,"></center>
+> <p align="center"><img src="https://latex.codecogs.com/gif.latex?(CW^2&space;/12)/C^2&space;=W^2&space;/12C&space;,"></p>
 >
 > if the appearance count is <img src="https://latex.codecogs.com/gif.latex?C">. Finally, we obtain [SD of AUC] by taking the square root of the variance:
 >
-> <center><img src="https://latex.codecogs.com/gif.latex?\textrm{[SD&space;of&space;AUC]}&space;=&space;\frac{W}{\sqrt{12C}}"></center>
+> <p align="center">
+<img src="https://latex.codecogs.com/gif.latex?\textrm{[SD&space;of&space;AUC]}&space;=&space;\frac{W}{\sqrt{12C}}"></p>
 
 
 <!-- > Next, assume that a k-mer sequence appears $C$ times at random positions within the window. The variance of the sum of their coordinates becomes $CW^2 / 12$, because variance of sum of random variables that follow the same probability distribution is proportional to the numbers of the variables.  Then, because AUC is calculated by dividing the sum of their coordinates by C and subtracting $W/2$, the variance of AUC is
